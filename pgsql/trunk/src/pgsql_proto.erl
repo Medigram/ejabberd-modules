@@ -193,7 +193,7 @@ connected(StateData, Sock) ->
     %% 'oidmap' in the process dictionary.
     Packet = encode_message(squery, "SELECT oid, typname FROM pg_type"),
     ok = send(Sock, Packet),
-    {ok, [{"SELECT", _ColDesc, Rows}]} = process_squery([]),
+    {ok, [{"SELECT" ++ _, _ColDesc, Rows}]} = process_squery([]),
     Rows1 = lists:map(fun ([CodeS, NameS]) ->
 			      Code = list_to_integer(CodeS),
 			      Name = list_to_atom(NameS),
@@ -591,7 +591,7 @@ encode_message(bind, {NamePortal, NamePrepared,
 			 fun (Bin) when is_binary(Bin) -> <<1:16/integer>>;
 			     (_Text) -> <<0:16/integer>> end,
 			 Parameters),
-    ParamFormatsP = erlang:concat_binary(ParamFormatsList),
+    ParamFormatsP = erlang:list_to_binary(ParamFormatsList),
 
     NParameters = length(Parameters),
     ParametersList = lists:map(
@@ -612,14 +612,14 @@ encode_message(bind, {NamePortal, NamePrepared,
 			       <<Size:32/integer, Bin/binary>>
 		       end,
 		       Parameters),
-    ParametersP = erlang:concat_binary(ParametersList),
+    ParametersP = erlang:list_to_binary(ParametersList),
 
     NResultFormats = length(ResultFormats),
     ResultFormatsList = lists:map(
 			  fun (binary) -> <<1:16/integer>>;
 			      (text) ->	  <<0:16/integer>> end,
 			  ResultFormats),
-    ResultFormatsP = erlang:concat_binary(ResultFormatsList),
+    ResultFormatsP = erlang:list_to_binary(ResultFormatsList),
 
     %%io:format("encode bind: ~p~n", [{PortalP, PreparedP,
 	%%			     NParameters, ParamFormatsP,
