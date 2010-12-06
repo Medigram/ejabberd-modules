@@ -152,17 +152,18 @@ commands() ->
 muc_online_rooms(ServerHost) ->
     MUCHost = find_host(ServerHost),
     Rooms = ets:tab2list(muc_online_room),
-    lists:map(
-      fun({_, {Roomname, Host}, _}) ->
+    lists:foldl(
+      fun({_, {Roomname, Host}, _}, Results) ->
 	      case MUCHost of
 		  global ->
-		      Roomname ++ "@" ++ Host;
+		      [Roomname ++ "@" ++ Host | Results];
 		  Host ->
-		      Roomname ++ "@" ++ Host;
+		      [Roomname ++ "@" ++ Host | Results];
 		  _ ->
-		      ok
+		      Results
 	      end
       end,
+      [],
       Rooms).
 
 muc_unregister_nick(Nick) ->
