@@ -19,6 +19,7 @@
 	 create_rooms_file/1, destroy_rooms_file/1,
 	 rooms_unused_list/2, rooms_unused_destroy/2,
 	 get_room_occupants/2,
+	 send_direct_invitation/4,
 	 change_room_option/4,
 	 set_room_affiliation/4,
 	 get_room_affiliations/2,
@@ -116,6 +117,13 @@ commands() ->
 							   {role, string}
 							  ]}}
 					     }}},
+
+     #ejabberd_commands{name = send_direct_invitation, tags = [muc_room],
+			desc = "Send a direct invitation to several destinations",
+			longdesc = "Password and Message can also be: none. Users JIDs are separated with : ",
+			module = ?MODULE, function = send_direct_invitation,
+		       args = [{room, string}, {password, string}, {reason, string}, {users, string}],
+		       result = {res, rescode}},
 
      #ejabberd_commands{name = change_room_option, tags = [muc_room],
 		       desc = "Change an option in a MUC room",
@@ -645,6 +653,57 @@ get_room_occupants(Pid) ->
 	       atom_to_list(Info#user.role)}
       end,
       dict:to_list(S#state.users)).
+
+%%----------------------------
+%% Send Direct Invitation
+%%----------------------------
+%% http://xmpp.org/extensions/xep-0249.html
+
+send_direct_invitation(RoomString, Password, Reason, UsersString) ->
+    RoomJid = jlib:string_to_jid(RoomString),
+    XmlEl = build_invitation(Password, Reason, RoomString),
+    UsersStrings = get_users_to_invite(RoomJid, UsersString),
+    [send_direct_invitation(RoomJid, jlib:string_to_jid(UserStrings), XmlEl)
+     || UserStrings <- UsersStrings],
+    timer:sleep(1000),
+    ok.
+
+get_users_to_invite(RoomJid, UsersString) ->
+    UsersStrings = string:tokens(UsersString, ":"),
+    OccupantsTuples = get_room_occupants(RoomJid#jid.luser,
+					 RoomJid#jid.lserver),
+    OccupantsJids = [jlib:string_to_jid(JidString)
+		     || {JidString, _Nick, _} <- OccupantsTuples],
+    lists:filter(
+	fun(UserString) ->
+	    UserJid = jlib:string_to_jid(UserString),
+	    %% [{"badlop@localhost/work","badlop","moderator"}]
+	    lists:all(fun(OccupantJid) ->
+		UserJid#jid.luser /= OccupantJid#jid.luser
+		orelse UserJid#jid.lserver /= OccupantJid#jid.lserver
+	    end,
+	    OccupantsJids)
+	end,
+	UsersStrings).
+
+build_invitation(Password, Reason, RoomString) ->
+    PasswordAttrList = case Password of
+	"none" -> [];
+	_ -> [{"password", Password}]
+    end,
+    ReasonAttrList = case Reason of
+	"none" -> [];
+	_ -> [{"reason", Reason}]
+    end,
+    XAttrs = [{"xmlns", ?NS_XCONFERENCE},
+	      {"jid", RoomString}]
+	++ PasswordAttrList
+	++ ReasonAttrList,
+    XEl = {xmlelement, "x", XAttrs, []},
+    {xmlelement, "message", [], [XEl]}.
+
+send_direct_invitation(FromJid, UserJid, XmlEl) ->
+    ejabberd_router:route(FromJid, UserJid, XmlEl).
 
 %%----------------------------
 %% Change Room Option
