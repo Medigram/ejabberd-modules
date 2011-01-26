@@ -1026,7 +1026,7 @@ set_vcard_content(User, Server, Data, SomeContent) ->
 update_vcard_els(Data, ContentList, Els1) ->
     Els2 = lists:keysort(2, Els1),
     [Data1 | Data2] = Data,
-    NewEl = case Data2 of
+    NewEls = case Data2 of
 		[] ->
 		    [{xmlelement, Data1, [], [{xmlcdata,Content}]} || Content <- ContentList];
 		[D2] ->
@@ -1039,10 +1039,10 @@ update_vcard_els(Data, ContentList, Els1) ->
 		    ContentOld2 = [A || {_, X, _, _} = A <- ContentOld1, X/=D2],
 		    ContentOld3 = lists:keysort(2, ContentOld2),
 		    ContentNew = lists:keymerge(2, Content2, ContentOld3),
-		    {xmlelement, Data1, [], ContentNew}
+		    [{xmlelement, Data1, [], ContentNew}]
 	    end,
     Els3 = lists:keydelete(Data1, 2, Els2),
-    lists:keymerge(2, [NewEl], Els3).
+    lists:keymerge(2, NewEls, Els3).
 
 
 %%%
