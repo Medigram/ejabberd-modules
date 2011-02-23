@@ -984,7 +984,7 @@ get_vcard([Data], A1) ->
 get_subtag(Xmlelement, Name) ->
     case code:ensure_loaded(exmpp_xml) of
 	{error, _} ->
-	    get_subtag_xml(Xmlelement, Name);
+	    [get_subtag_xml(Xmlelement, Name)];
 	{module, exmpp_xml} ->
 	    get_subtag_exmpp(Xmlelement, Name)
     end.
