@@ -146,7 +146,7 @@ commands() ->
 						 {affiliation, {tuple,
 								[{username, string},
 								 {domain, string},
-								 {affiliation, string},
+								 {affiliation, atom},
 								 {reason, string}
 								]}}
 						}}}
