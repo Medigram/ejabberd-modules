@@ -763,10 +763,10 @@ request_iqversion(User, Host, Resource) ->
     To = jlib:make_jid(User, Host, Resource),
     ToStr = jlib:jid_to_string(To),
     Packet = {xmlelement,"iq",
-	      [{"from",FromStr}, {"to",ToStr}, {"type","get"}, {"xml:lang","es"}],
-	      [{xmlcdata,"\n"}, {xmlcdata,"  "},
-	       {xmlelement, "query",
-		[{"xmlns","jabber:iq:version"}], []}, {xmlcdata,"\n"}]},
+	      [{"from",FromStr}, {"to",ToStr}, {"type","get"},
+		{"id", "statsdx" ++ randoms:get_string()}],
+	      [{xmlelement, "query",
+		[{"xmlns","jabber:iq:version"}], []}]},
     ejabberd_local:route(From, To, Packet).
 
 %% cuando el virtualJID recibe una respuesta iqversion,
