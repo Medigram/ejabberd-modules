@@ -1,6 +1,6 @@
 %%%----------------------------------------------------------------------
 %%%
-%%% ejabberd, Copyright (C) 2002-2009   ProcessOne
+%%% ejabberd, Copyright (C) 2002-2011   ProcessOne
 %%%
 %%% This program is free software; you can redistribute it and/or
 %%% modify it under the terms of the GNU General Public License as
@@ -22,6 +22,7 @@
 -define(NS_DISCO_ITEMS,  "http://jabber.org/protocol/disco#items").
 -define(NS_DISCO_INFO,   "http://jabber.org/protocol/disco#info").
 -define(NS_VCARD,        "vcard-temp").
+-define(NS_VCARD_UPDATE, "vcard-temp:x:update").
 -define(NS_AUTH,         "jabber:iq:auth").
 -define(NS_AUTH_ERROR,   "jabber:iq:auth:error").
 -define(NS_REGISTER,     "jabber:iq:register").
@@ -29,6 +30,7 @@
 -define(NS_ROSTER,       "jabber:iq:roster").
 -define(NS_ROSTER_VER,   "urn:xmpp:features:rosterver").
 -define(NS_PRIVACY,      "jabber:iq:privacy").
+-define(NS_BLOCKING,     "urn:xmpp:blocking").
 -define(NS_PRIVATE,      "jabber:iq:private").
 -define(NS_VERSION,      "jabber:iq:version").
 -define(NS_TIME90,       "jabber:iq:time"). % TODO: Remove once XEP-0090 is Obsolete
@@ -47,6 +49,7 @@
 -define(NS_MUC_USER,     "http://jabber.org/protocol/muc#user").
 -define(NS_MUC_ADMIN,    "http://jabber.org/protocol/muc#admin").
 -define(NS_MUC_OWNER,    "http://jabber.org/protocol/muc#owner").
+-define(NS_MUC_UNIQUE,   "http://jabber.org/protocol/muc#unique").
 -define(NS_PUBSUB,       "http://jabber.org/protocol/pubsub").
 -define(NS_PUBSUB_EVENT, "http://jabber.org/protocol/pubsub#event").
 -define(NS_PUBSUB_OWNER, "http://jabber.org/protocol/pubsub#owner").
@@ -83,6 +86,7 @@
 
 -define(NS_CAPS,          "http://jabber.org/protocol/caps").
 -define(NS_SHIM,          "http://jabber.org/protocol/shim").
+-define(NS_ADDRESS,       "http://jabber.org/protocol/address").
 
 %% CAPTCHA related NSes.
 -define(NS_OOB, "jabber:x:oob").
@@ -138,6 +142,8 @@
 	?STANZA_ERROR("407", "auth",   "subscription-required")).
 -define(ERR_UNEXPECTED_REQUEST,
 	?STANZA_ERROR("400", "wait",   "unexpected-request")).
+-define(ERR_UNEXPECTED_REQUEST_CANCEL,
+  ?STANZA_ERROR("401", "cancel", "unexpected-request")).
 %-define(ERR_,
 %	?STANZA_ERROR("", "", "")).
 
