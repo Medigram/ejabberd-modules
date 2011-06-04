@@ -312,11 +312,11 @@ $ erl -pa '/home/jabber/xmlrpc-1.13/ebin'
 3> xmlrpc:call({127, 0, 0, 1}, 4560, "/", {call, multhis, [{struct,[{a, 83}, {b, 689}]}]}).
 {ok,{response,[57187]}}
 
-4> xmlrpc:call({127, 0, 0, 1}, 4560, "/", {call, create_account,
+4> xmlrpc:call({127, 0, 0, 1}, 4560, "/", {call, register,
 [{struct, [{user, "ggeo"}, {host, "example.com"}, {password, "gogo11"}]}]}).
 {ok,{response,[0]}}
 
-5> xmlrpc:call({127, 0, 0, 1}, 4560, "/", {call, create_account,
+5> xmlrpc:call({127, 0, 0, 1}, 4560, "/", {call, register,
 [{struct, [{user, "ggeo"}, {host, "example.com"}, {password, "gogo11"}]}]}).
 {ok,{response,[409]}}
 
@@ -366,7 +366,7 @@ params["user"] = "ggeo"
 params["host"] = "localhost"
 params["password"] = "gogo11"
 
-result = server.create_account(params)
+result = server.register(params)
 print result
 -------
 
