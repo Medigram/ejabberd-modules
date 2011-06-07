@@ -1386,7 +1386,7 @@ privacy_set(Username, Host, QueryS) ->
     IQ = jlib:iq_query_info(StanzaEl),
     {result, []} = ejabberd_hooks:run_fold(
 		     privacy_iq_set,
-		     "localhost",
+		     Host,
 		     {error, ?ERR_FEATURE_NOT_IMPLEMENTED},
 		     [From, To, IQ]
 		    ),
