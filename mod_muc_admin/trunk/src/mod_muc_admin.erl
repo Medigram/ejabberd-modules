@@ -381,7 +381,7 @@ create_room(Name, Host, ServerHost) ->
     %% Get all remaining mod_muc parameters that might be utilized
     Access = gen_mod:get_module_opt(ServerHost, mod_muc, access, all),
     AcCreate = gen_mod:get_module_opt(ServerHost, mod_muc, access_create, all),
-    AcAdmin = gen_mod:get_module_opt(ServerHost, moc_muc, access_admin, none),
+    AcAdmin = gen_mod:get_module_opt(ServerHost, mod_muc, access_admin, none),
     AcPer = gen_mod:get_module_opt(ServerHost, mod_muc, access_persistent, all),
     HistorySize = gen_mod:get_module_opt(ServerHost, mod_muc, history_size, 20),
     RoomShaper = gen_mod:get_module_opt(ServerHost, mod_muc, room_shaper, none),
