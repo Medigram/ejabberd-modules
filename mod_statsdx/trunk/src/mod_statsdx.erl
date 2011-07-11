@@ -848,6 +848,8 @@ list_elem(clients, full) ->
      {"Psi", psi},
      {"Adium", adium},
      {"Pandion", pandion},
+     {"Telepathy Gabble", 'telepathy-gabble'},
+     {"Swift", swift},
      {"Kopete", kopete},
      {"Exodus", exodus},
      {"libgaim", libgaim},
