@@ -1384,7 +1384,7 @@ privacy_set(Username, Host, QueryS) ->
     QueryEl = xml_stream:parse_element(QueryS),
     StanzaEl = {xmlelement, "iq", [{"type", "set"}], [QueryEl]},
     IQ = jlib:iq_query_info(StanzaEl),
-    {result, []} = ejabberd_hooks:run_fold(
+    ejabberd_hooks:run_fold(
 		     privacy_iq_set,
 		     Host,
 		     {error, ?ERR_FEATURE_NOT_IMPLEMENTED},
