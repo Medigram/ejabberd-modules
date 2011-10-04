@@ -422,12 +422,11 @@ muc_create_room({Name, Host, _}, DefRoomOpts) ->
 %% @doc Destroy the room immediately.
 %% If the room has participants, they are not notified that the room was destroyed;
 %% they will notice when they try to chat and receive an error that the room doesn't exist.
-destroy_room(Name, Service, Server) ->
+destroy_room(Name, Service, _Server) ->
     case mnesia:dirty_read(muc_online_room, {Name, Service}) of
 	[R] ->
 	    Pid = R#muc_online_room.pid,
-	    mod_muc:room_destroyed(Service, Name, Pid, Server),
-	    {atomic, ok} = mod_muc:forget_room(Service, Name),
+	    gen_fsm:send_all_state_event(Pid, destroy),
 	    ok;
 	[] ->
 	    error
